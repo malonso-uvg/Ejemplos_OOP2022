@@ -69,6 +69,10 @@ public class Agenda {
 		return true;
 	}
 	
+	public ArrayList<Contact> getContacts(){
+		return myAgenda;
+	}
+	
 	public Contact searchByName(String firstname, String lastname) {
 		for (Contact aContact : myAgenda) {
 			if (	(lastname.equalsIgnoreCase(aContact.getLastName())) //only if firstname and lastname match
@@ -77,10 +81,6 @@ public class Agenda {
 			}
 		}
 		return null; //if contact is not found
-	}
-	
-	public ArrayList<Contact> getContacts(){
-		return myAgenda;
 	}
 	
 }

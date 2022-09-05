@@ -18,6 +18,7 @@ public class NewAgendaDialog extends JDialog {
 	private JTextField txtUserName;
 
 	AgendaUI mainForm;
+	private NewAgendaDialog selfNewAgenda;
 
 	/**
 	 * Create the dialog.
@@ -26,6 +27,8 @@ public class NewAgendaDialog extends JDialog {
 		setTitle("Nueva Agenda");
 		setBounds(100, 100, 450, 163);
 		getContentPane().setLayout(null);
+		
+		this.selfNewAgenda = this;
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Usuario:");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -50,6 +53,7 @@ public class NewAgendaDialog extends JDialog {
                             "Agenda Creada",
                             JOptionPane.INFORMATION_MESSAGE);
 					
+					selfNewAgenda.dispose();
 					
 				} else { //field is empty
 					JOptionPane.showMessageDialog(
@@ -60,6 +64,7 @@ public class NewAgendaDialog extends JDialog {
 				}
 			}
 		});
+		
 		btnCrearAgenda.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnCrearAgenda.setBounds(10, 60, 414, 43);
 		getContentPane().add(btnCrearAgenda);

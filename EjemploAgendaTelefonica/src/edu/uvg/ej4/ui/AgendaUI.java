@@ -7,8 +7,10 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JFileChooser;
 
 import edu.uvg.ej4.controller.Agenda;
+import edu.uvg.ej4.controller.PersistentAgendaManagement;
 import edu.uvg.ej4.model.Contact;
 import edu.uvg.ej4.model.Email;
 import edu.uvg.ej4.model.Phone;
@@ -17,6 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.DefaultListModel;
@@ -25,8 +29,10 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import javax.swing.event.ListSelectionEvent;
 
 public class AgendaUI extends JFrame {
@@ -77,12 +83,84 @@ public class AgendaUI extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Cargar Agenda");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				final JFileChooser  fileDialog = new JFileChooser();
 				
+				int returnVal = fileDialog.showOpenDialog(selfAgendaUI);
+	            
+	            if (returnVal == JFileChooser.APPROVE_OPTION) {
+	               File file = fileDialog.getSelectedFile();
+	               
+	               PersistentAgendaManagement agendaController = new PersistentAgendaManagement();
+				    
+				    try {
+				    	
+				    	myAgenda = agendaController.getAgendaFromFile(file);
+				    	showInformationOnUI();
+				    	
+				    	JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"La agenda se cargó exitosamente",
+	                            "Operación Exitosa",
+	                            JOptionPane.INFORMATION_MESSAGE);
+				    	
+				    } catch (Exception ex ){
+				    	JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"Se encontró un error al intentar cargar la agenda: " + ex.getMessage(),
+	                            "No se pudo cargar",
+	                            JOptionPane.ERROR_MESSAGE);
+				    }
+	               
+	            } else {
+	            	JOptionPane.showMessageDialog(
+							selfAgendaUI, 
+							"Se encontró un error al intentar cargar la agenda",
+                            "No se pudo cargar",
+                            JOptionPane.ERROR_MESSAGE);
+	            }      
+	         
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Guardar Agenda");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Especificar en donde guardar la agenda");   
+				 
+				int userSelection = fileChooser.showSaveDialog(selfAgendaUI);
+				 
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+				    
+				    PersistentAgendaManagement agendaController = new PersistentAgendaManagement();
+				    
+				    JOptionPane.showMessageDialog(
+							selfAgendaUI, 
+							"La agenda se guardó exitosamente",
+                            "Operación Exitosa",
+                            JOptionPane.INFORMATION_MESSAGE);
+				    
+				    try {
+				    	agendaController.saveAgendaIntoFile(myAgenda, fileChooser.getSelectedFile().getAbsolutePath());
+				    } catch (Exception ex ){
+				    	JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"Se encontró un error al intentar guardar la agenda: " + ex.getMessage(),
+	                            "No se pudo guardar",
+	                            JOptionPane.ERROR_MESSAGE);
+				    }
+				    
+				    
+				} else {
+			    	JOptionPane.showMessageDialog(
+							selfAgendaUI, 
+							"Se encontró un error al intentar guardar la agenda",
+                            "No se pudo guardar",
+                            JOptionPane.ERROR_MESSAGE);
+			    }
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Salir");
@@ -102,9 +180,21 @@ public class AgendaUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					NewContactDialog dialog = new NewContactDialog(selfAgendaUI);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
+					
+					//Checking if the agenda has been created
+					if(myAgenda != null) {
+						NewContactDialog dialog = new NewContactDialog(selfAgendaUI);
+						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						dialog.setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"Debe crear una agenda de primero",
+	                            "Agenda vacía",
+	                            JOptionPane.ERROR_MESSAGE);
+					}
+					
+					
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
