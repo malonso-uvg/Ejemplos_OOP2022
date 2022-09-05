@@ -59,8 +59,17 @@ public class MainPuzzleUI extends JFrame {
 				    try {
 				    	
 				    	_game = new Game( new Puzzle(savedPuzzle.getPuzzleFromFile(file)) );
-				    	targetPuzzleFromMatrix(_game.getGoalPuzzle());
 				    	
+				    	//New frame size
+				    	selfFrame.setBounds(100, 100, ((_game.getGoalPuzzle().getColumns_qty() * 60 + 60)
+				    			+ (_game.getActualPuzzle().getColumns_qty() * 60 + 60)
+				    			), _game.getActualPuzzle().getRows_qty() * 60 + 60);
+
+				    	
+				    	PuzzleFromMatrix(_game.getGoalPuzzle(), 0, false);
+				    	PuzzleFromMatrix(_game.getActualPuzzle(), (_game.getGoalPuzzle().getColumns_qty() * 60 + 60), true);
+				    	
+				    					    	
 				    	JOptionPane.showMessageDialog(
 				    			selfFrame, 
 								"El tablero se cargó exitosamente",
@@ -96,8 +105,10 @@ public class MainPuzzleUI extends JFrame {
 		
 		
 	}
+	//JMatrixButtonEvent
 	
-	private void targetPuzzleFromMatrix(Puzzle _targetMatrix){
+	
+	private void PuzzleFromMatrix(Puzzle _targetMatrix, int start, boolean isActualPuzzle){
 		int rows_qty = _targetMatrix.getRows_qty();
 		int columns_qty = _targetMatrix.getColumns_qty();
 		JMatrixButton[][] _targetPuzzle = new JMatrixButton[rows_qty][columns_qty];
@@ -125,12 +136,20 @@ public class MainPuzzleUI extends JFrame {
 				}break;
 				}
 				
-				btnNewButton.setBounds(60 * i, 60 * j, 40, 40);
+				btnNewButton.setBounds(start + 60 * j, 60 * i, 40, 40);
+				if (isActualPuzzle) {
+					btnNewButton.addActionListener(new JMatrixButtonEvent(btnNewButton, _game, 3));
+				}
 				getContentPane().add(btnNewButton);
 			}
 		}
 		
 		getContentPane().revalidate();
+		
+		this.revalidate();
+		this.repaint();
+		
+		
 	}
 	
 }

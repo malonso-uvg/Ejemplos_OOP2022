@@ -18,6 +18,7 @@ public class Game {
 	ArrayList<Puzzle> movements;
 	Puzzle goalPuzzle;
 	Puzzle actualPuzzle;
+	boolean gameIsOver;
 	
 	public Game(Puzzle goalPuzzle) throws Exception{
 		setMovements(new ArrayList<Puzzle>());
@@ -25,6 +26,7 @@ public class Game {
 		setMoves(0);
 		setActualPuzzle( new Puzzle( getRandomPuzzle(goalPuzzle.getRows_qty(), goalPuzzle.getColumns_qty()) ) );
 		getMovements().add(getActualPuzzle());
+		gameIsOver = false;
 	}
 	
 	/**
@@ -84,6 +86,7 @@ public class Game {
 	 */
 	public void makeMove(int row, int column, int value) {
 		getActualPuzzle().getInternalPuzzle()[row][column] = value;
+		moves++;
 		getMovements().add(getActualPuzzle());
 	}
 	
@@ -121,6 +124,20 @@ public class Game {
 		}
 		
 		return randomPuzzle;
+	}
+
+	/**
+	 * @return the gameIsOver
+	 */
+	public boolean isGameIsOver() {
+		return gameIsOver;
+	}
+
+	/**
+	 * @param gameIsOver the gameIsOver to set
+	 */
+	public void setGameIsOver(boolean gameIsOver) {
+		this.gameIsOver = gameIsOver;
 	}
 	
 	
