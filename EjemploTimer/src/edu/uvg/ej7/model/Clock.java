@@ -49,5 +49,8 @@ public class Clock {
 		this.seconds = seconds;
 	}
 	
+	public void work() {
+		//information added
+	}
 	
 }
