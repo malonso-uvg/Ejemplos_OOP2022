@@ -75,4 +75,8 @@ public class Game {
 		
 		return positions;
 	}
+	
+	public boolean isGameComplete() {
+		return word.length() == correctLetters.size();
+	}
 }

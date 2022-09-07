@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -27,6 +28,7 @@ public class AhorcadoDialog extends JDialog {
 	private ArrayList<JTextField> txtAllLetters; //going to need an ArrayList of letters
 	JLabel lblFailedLetters;
 	JLabel lblAhorcado;
+	JButton btnProbar;
 	
 	
 	private String[] IMAGES = {
@@ -84,7 +86,7 @@ public class AhorcadoDialog extends JDialog {
         });
         
         
-        JButton btnProbar = new JButton("Intentar");
+        btnProbar = new JButton("Intentar");
         btnProbar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		if (!txtLetter.getText().isBlank()) {
@@ -153,29 +155,48 @@ public class AhorcadoDialog extends JDialog {
 		for (Integer index : result) {
 			txtAllLetters.get(index).setText(txtLetter.getText());
 		}
+		
+		if (myGame.isGameComplete()) {
+			txtLetter.setEnabled(false);
+			btnProbar.setEnabled(false);
+			
+			JOptionPane.showMessageDialog(
+					this, 
+					"Felicidades, ha ganado el juego",
+                    "Juego completado",
+                    JOptionPane.INFORMATION_MESSAGE);
+			
+		}
 	}
 	
 	void failedAttempt() {
-		if (myGame.getFailedAtempts() <= 6) {
-			lblFailedLetters.setText("");
-			for (String failed : myGame.getFailedLetters()) {
-				lblFailedLetters.setText(lblFailedLetters.getText() + " " + failed);
-				
-				//New image to the hangman
-				try {
-					BufferedImage imgLcl = ImageIO.read(new File(IMAGES[myGame.getFailedAtempts()]));
-			        ImageIcon iconLcl = new ImageIcon(imgLcl);
-			        lblAhorcado.setIcon(iconLcl );
-			        Dimension size = lblAhorcado.getPreferredSize();
-			        lblAhorcado.setBounds(30, 30, size.width, size.height);
-				} catch (Exception e) {
-					
-				}
-				
-			}
-		} else {
+		
+		lblFailedLetters.setText("");
+		for (String failed : myGame.getFailedLetters()) {
+			lblFailedLetters.setText(lblFailedLetters.getText() + " " + failed);
+		}
+			
+		//New image to the hangman
+		try {
+			BufferedImage imgLcl = ImageIO.read(new File(IMAGES[myGame.getFailedAtempts()]));
+	        ImageIcon iconLcl = new ImageIcon(imgLcl);
+	        lblAhorcado.setIcon(iconLcl );
+	        Dimension size = lblAhorcado.getPreferredSize();
+	        lblAhorcado.setBounds(30, 30, size.width, size.height);
+	        
+	        if (myGame.getFailedAtempts() == 6) {
+	        	btnProbar.setEnabled(false);
+				txtLetter.setEnabled(false);
+				JOptionPane.showMessageDialog(
+						this, 
+						"No se logro enconrar la palabra, ha perdido",
+	                    "Operación Fallida",
+	                    JOptionPane.ERROR_MESSAGE);
+	        }
+		} catch (Exception e) {
 			
 		}
+				
 	}
 
 
