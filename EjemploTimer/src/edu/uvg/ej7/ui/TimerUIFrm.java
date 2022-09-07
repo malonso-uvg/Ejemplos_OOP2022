@@ -7,10 +7,17 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
+import edu.uvg.ej7.model.Clock;
+
+import java.awt.event.ActionEvent;
 
 public class TimerUIFrm extends JFrame {
 
-
+	Timer timer;
+	Clock myClock;
 
 	/**
 	 * Create the frame.
@@ -26,9 +33,27 @@ public class TimerUIFrm extends JFrame {
 		lblClock.setBounds(149, 84, 130, 46);
 		getContentPane().add(lblClock);
 		
+		myClock = new Clock();
+		
+		timer = new Timer (1000, new ActionListener ()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	myClock.work();
+		    	lblClock.setText(myClock.getHours() + ":" + myClock.getMinutes() + ":" + myClock.getSeconds()); 
+		    }
+		});
+		
 		JButton btnStart = new JButton("Iniciar");
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				timer.start();
+			}
+		});
 		btnStart.setBounds(169, 162, 89, 23);
 		getContentPane().add(btnStart);
+		
+		
 
 	}
 }
