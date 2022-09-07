@@ -50,7 +50,18 @@ public class Clock {
 	}
 	
 	public void work() {
-		//information added
+		seconds++;
+		if (seconds > 59) {
+			seconds = 0;
+			minutes++;
+			if (minutes > 59) {
+				minutes = 0;
+				hours++;
+				if (hours > 23) {
+					hours = 0;
+				}
+			}
+		} 
 	}
 	
 }
