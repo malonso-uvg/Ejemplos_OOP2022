@@ -1,18 +1,28 @@
 package edu.uvg.ej7.ui;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 import javax.swing.Timer;
 
 import edu.uvg.ej7.model.Clock;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import java.awt.Color;
 
 public class TimerUIFrm extends JFrame {
 
@@ -35,7 +45,7 @@ public class TimerUIFrm extends JFrame {
 		
 		myClock = new Clock();
 		
-		timer = new Timer (1000, new ActionListener ()
+		timer = new Timer (100, new ActionListener ()
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
@@ -61,7 +71,6 @@ public class TimerUIFrm extends JFrame {
 		});
 		btnDetener.setBounds(169, 210, 85, 21);
 		getContentPane().add(btnDetener);
-		
 		
 
 	}
