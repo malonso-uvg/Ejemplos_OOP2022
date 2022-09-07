@@ -53,6 +53,15 @@ public class TimerUIFrm extends JFrame {
 		btnStart.setBounds(169, 162, 89, 23);
 		getContentPane().add(btnStart);
 		
+		JButton btnDetener = new JButton("Detener");
+		btnDetener.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+			}
+		});
+		btnDetener.setBounds(169, 210, 85, 21);
+		getContentPane().add(btnDetener);
+		
 		
 
 	}
