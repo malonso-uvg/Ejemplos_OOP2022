@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.Timer;
 
 import edu.uvg.ej8.controller.Game;
 import java.awt.event.ActionListener;
@@ -29,6 +30,12 @@ public class AhorcadoDialog extends JDialog {
 	JLabel lblFailedLetters;
 	JLabel lblAhorcado;
 	JButton btnProbar;
+	Timer cronometro;
+	JLabel lblSegundos;
+
+	public JLabel getlblSegundos() {
+		return this.lblSegundos;
+	}
 	
 	
 	private String[] IMAGES = {
@@ -51,6 +58,8 @@ public class AhorcadoDialog extends JDialog {
 		
 		myGame = new Game(word);
 		txtAllLetters = new ArrayList<JTextField>(); //Arreglo de Jtext field
+		cronometro = new Timer(1000, new CronometroEvent(myGame, this));
+		cronometro.start();
 		
 		JLabel lblLetra = new JLabel("Letra");
         lblLetra.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -89,7 +98,7 @@ public class AhorcadoDialog extends JDialog {
         btnProbar = new JButton("Intentar");
         btnProbar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (!txtLetter.getText().isBlank()) {
+        		if (!txtLetter.getText().trim().equals("")) {
         			ArrayList<Integer> result = myGame.tryALetter(txtLetter.getText());
         			if (result.size() > 0) { //Success
         				successfulAttempt(result);
@@ -126,6 +135,11 @@ public class AhorcadoDialog extends JDialog {
 	        lblFailedLetters.setBounds(476, 216, 103, 35);
 	        getContentPane().add(lblFailedLetters);
 	        
+	        lblSegundos = new JLabel("5");
+	        lblSegundos.setFont(new Font("Tahoma", Font.BOLD, 15));
+	        lblSegundos.setBounds(350, 311, 103, 35);
+	        getContentPane().add(lblSegundos);
+	        
 	        createTextBoxes(myGame);
 	        
 		} catch (Exception ex){
@@ -151,7 +165,7 @@ public class AhorcadoDialog extends JDialog {
 			setBounds(100, 100, lastTextBoxPositionX + 100, 600);
 	}
 	
-	void successfulAttempt(ArrayList<Integer> result) {
+	public void successfulAttempt(ArrayList<Integer> result) {
 		for (Integer index : result) {
 			txtAllLetters.get(index).setText(txtLetter.getText());
 		}
@@ -169,7 +183,7 @@ public class AhorcadoDialog extends JDialog {
 		}
 	}
 	
-	void failedAttempt() {
+	public void failedAttempt() {
 		
 		lblFailedLetters.setText("");
 		for (String failed : myGame.getFailedLetters()) {
@@ -198,6 +212,4 @@ public class AhorcadoDialog extends JDialog {
 		}
 				
 	}
-
-
 }
