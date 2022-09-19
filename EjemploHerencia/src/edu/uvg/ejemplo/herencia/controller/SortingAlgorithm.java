@@ -11,6 +11,9 @@ public abstract class SortingAlgorithm {
 
 	int[] numbers;
 
+	public SortingAlgorithm(int[] _numbers) {
+		this.setNumbers(_numbers);
+	}
 	/**
 	 * @return the numbers
 	 */
