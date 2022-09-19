@@ -9,11 +9,13 @@ package edu.uvg.ejemplo.herencia.controller;
  */
 public abstract class SortingAlgorithm {
 
-	int[] numbers;
+	protected int[] numbers;
 
 	public SortingAlgorithm(int[] _numbers) {
 		this.setNumbers(_numbers);
 	}
+	
+	
 	/**
 	 * @return the numbers
 	 */
