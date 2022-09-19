@@ -5,6 +5,7 @@ package edu.uvg.ejemplo.herencia.ui;
 
 import java.util.Scanner;
 
+import edu.uvg.ejemplo.herencia.controller.BubbleSort;
 import edu.uvg.ejemplo.herencia.controller.QuickSort;
 import edu.uvg.ejemplo.herencia.controller.SelectionSort;
 import edu.uvg.ejemplo.herencia.controller.SortingAlgorithm;
@@ -33,6 +34,10 @@ public class DriverProgram {
 		int option = Integer.parseInt(in.nextLine());
 		
 		switch(option) {
+		
+			case 1:{
+				sortingMethod = new BubbleSort(items);
+			}break;
 
 			case 2:{
 				sortingMethod = new SelectionSort(items);
