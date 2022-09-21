@@ -12,6 +12,7 @@ public class Circulo extends FiguraGeometrica {
 	
 	public Circulo(double _radio) {
 		this.radio = _radio;
+		this.setTipo(0);
 	}
 	
 	/**
@@ -31,7 +32,6 @@ public class Circulo extends FiguraGeometrica {
 	}
 
 
-
 	@Override
 	public double calcularPerimetro() {
 		return (2.00 * Math.PI * radio); 
@@ -42,4 +42,10 @@ public class Circulo extends FiguraGeometrica {
 		return (Math.PI * Math.pow(radio, 2));
 	}
 
+	@Override
+	public String toString() {
+		return "Circulo de radio: " + radio;
+	}
+
+	
 }

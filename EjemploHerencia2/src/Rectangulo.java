@@ -14,6 +14,7 @@ public class Rectangulo extends FiguraGeometrica {
 	public Rectangulo(double _base, double _altura) {
 		setBase(_base);
 		setAltura(_altura);
+		this.setTipo(1);
 	}
 	
 	/**
@@ -50,8 +51,14 @@ public class Rectangulo extends FiguraGeometrica {
 	}
 
 	@Override
-	public double calcularArea() {
+	public double calcularArea() {		
 		return (base * altura);
 	}
 
+	@Override
+	public String toString() {
+		return "Rectangulo con base: " + base + " y altura: " + altura;
+	}
+
+	
 }
