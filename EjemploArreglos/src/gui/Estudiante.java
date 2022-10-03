@@ -7,7 +7,7 @@ package gui;
  * @author MAAG
  *
  */
-public class Estudiante {
+public class Estudiante implements Comparable{
 
 	
 	private int carnet;
@@ -59,6 +59,31 @@ public class Estudiante {
 	public String toString() {
 		
 		return "Estudiante " + getNombre() + " Carnet: " + getCarnet() + " Nota: " + getNota();
+	}
+	
+	@Override
+	public int compareTo(Object o) {
+		Estudiante otroEstudiante = (Estudiante)o;
+		
+		if (this.getNota() < otroEstudiante.getNota()) {
+			return 1;
+		} else if (this.getNota() > otroEstudiante.getNota()){
+			return -1;
+		} else {
+			int result = this.getNombre().compareTo(otroEstudiante.getNombre());
+			
+			if (result == 0) {
+				if (this.getCarnet() < otroEstudiante.getCarnet()) {
+					return 1;
+				} else if (this.getCarnet() > otroEstudiante.getCarnet()){
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+			
+			return result;
+		}
 	}
 	
 	

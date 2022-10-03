@@ -57,6 +57,21 @@ public class EJemploGUI {
 		System.out.println("PALABRAS ORDENADAS");
 		EscribirArrayList(misPalabras);
 		
+		
+		ArrayList<Estudiante> misEstudiantes_v2 = new ArrayList<Estudiante>();
+		misEstudiantes_v2.add( new Estudiante(1234, "Moises", 90) );
+		misEstudiantes_v2.add( new Estudiante(1235, "Antonio", 50) );
+		misEstudiantes_v2.add( new Estudiante(1236, "Estudiante1", 50) );
+		misEstudiantes_v2.add( new Estudiante(1237, "Estudiante1", 50) );
+		misEstudiantes_v2.add( new Estudiante(1240, "Estudiante3", 100) );
+		
+		System.out.println("ESTUDIANTES DESORDENADOS");
+		EscribirArrayList(misEstudiantes_v2);
+		System.out.println("ORDENANDO..");
+		Collections.sort(misEstudiantes_v2);
+		System.out.println("ESTUDIANTES ORDENADOS");
+		EscribirArrayList(misEstudiantes_v2);
+		
 	}
 	
 	public static void EscribirArrayList(ArrayList _items) {
