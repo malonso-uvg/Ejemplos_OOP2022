@@ -10,7 +10,9 @@ public abstract class FiguraGeometrica {
 
 	protected int tipo;
 	public static final int CIRCULO = 0;
-	public static final int RECTANGULO = 0;
+	public static final int RECTANGULO = 1;
+	public static final int ESFERA = 2;
+	public static final int CUBO = 3;
 	
 	/**
 	 * @return the tipo
@@ -24,10 +26,6 @@ public abstract class FiguraGeometrica {
 	 */
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
-	}
-
-	public double calcularPerimetro() {
-		return 0;
 	}
 	
 	public double calcularArea() {

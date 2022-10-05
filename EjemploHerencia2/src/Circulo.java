@@ -6,13 +6,13 @@
  * @author moises.alonso
  *
  */
-public class Circulo extends FiguraGeometrica {
+public class Circulo extends FiguraGeometrica implements IFigura2D{
 
 	private double radio;
 	
 	public Circulo(double _radio) {
 		this.radio = _radio;
-		this.setTipo(0);
+		this.setTipo(FiguraGeometrica.CIRCULO);
 	}
 	
 	/**
@@ -32,10 +32,7 @@ public class Circulo extends FiguraGeometrica {
 	}
 
 
-	@Override
-	public double calcularPerimetro() {
-		return (2.00 * Math.PI * radio); 
-	}
+	
 
 	@Override
 	public double calcularArea() {
@@ -45,6 +42,11 @@ public class Circulo extends FiguraGeometrica {
 	@Override
 	public String toString() {
 		return "Circulo de radio: " + radio;
+	}
+
+	@Override
+	public double calcularPerimetro() {
+		return (2.00 * Math.PI * radio);
 	}
 
 	

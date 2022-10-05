@@ -6,7 +6,7 @@
  * @author moises.alonso
  *
  */
-public class Rectangulo extends FiguraGeometrica {
+public class Rectangulo extends FiguraGeometrica implements IFigura2D{
 
 	private double base;
 	private double altura;
@@ -14,7 +14,7 @@ public class Rectangulo extends FiguraGeometrica {
 	public Rectangulo(double _base, double _altura) {
 		setBase(_base);
 		setAltura(_altura);
-		this.setTipo(1);
+		this.setTipo(FiguraGeometrica.RECTANGULO);
 	}
 	
 	/**
