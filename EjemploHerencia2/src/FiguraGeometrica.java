@@ -15,6 +15,7 @@ public abstract class FiguraGeometrica {
 	public static final int CUBO = 3;
 	public static final int TRIANGULO = 4;
 	public static final int CONO = 5;
+	public static final int TESSERACT = 6;
 	
 	/**
 	 * @return the tipo
