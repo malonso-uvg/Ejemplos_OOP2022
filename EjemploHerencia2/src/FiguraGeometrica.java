@@ -13,6 +13,8 @@ public abstract class FiguraGeometrica {
 	public static final int RECTANGULO = 1;
 	public static final int ESFERA = 2;
 	public static final int CUBO = 3;
+	public static final int TRIANGULO = 4;
+	public static final int CONO = 5;
 	
 	/**
 	 * @return the tipo
