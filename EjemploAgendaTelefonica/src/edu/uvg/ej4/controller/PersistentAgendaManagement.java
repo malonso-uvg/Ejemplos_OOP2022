@@ -18,11 +18,6 @@ import edu.uvg.ej4.model.Phone;
  */
 public class PersistentAgendaManagement {
 
-	private static final int TYPE_FIELD = 0;
-	private static final int FIRSTNAME_FIELD = 1;
-	private static final int LASTNAME_FIELD = 2;
-	private static final int DATA_FIELD = 3;
-	private static final int DATATYPE_FIELD = 4;
 	
 	/**
 	 * This method allow get an Agenda from a file
@@ -47,7 +42,7 @@ public class PersistentAgendaManagement {
 	                		if (line.split(",").length == 5) {
 	                			String[] fields = line.split(",");
 	                			
-	                			if (fields[TYPE_FIELD].charAt(TYPE_FIELD) == '1') { //it is a phone
+	                			if (fields[DataStore.TYPE_FIELD].charAt(DataStore.TYPE_FIELD) == '1') { //it is a phone
 	                				addPhoneToAgenda(savedAgenda, fields);
 	                			} else if (fields[0].charAt(0) == '2') { //it is a email
 	                				addEmailToAgenda(savedAgenda, fields);
@@ -116,15 +111,15 @@ public class PersistentAgendaManagement {
 	 */
 	private void addPhoneToAgenda(Agenda _theAgenda, String[] fileLine) {
 		if (_theAgenda != null) {
-			Contact aContact = _theAgenda.searchByName(fileLine[FIRSTNAME_FIELD], fileLine[LASTNAME_FIELD]);
+			Contact aContact = _theAgenda.searchByName(fileLine[DataStore.FIRSTNAME_FIELD], fileLine[DataStore.LASTNAME_FIELD]);
 			boolean contactFound = aContact != null; //If aContact is not null then the value is true;
 			
 			if (!contactFound) { //No contact found
-				aContact = new Contact(fileLine[FIRSTNAME_FIELD], fileLine[LASTNAME_FIELD]);
+				aContact = new Contact(fileLine[DataStore.FIRSTNAME_FIELD], fileLine[DataStore.LASTNAME_FIELD]);
 			}
 			
 			//Save the phone
-			aContact.getPhoneNumbers().add(new Phone(Long.parseLong(fileLine[DATA_FIELD]), fileLine[DATATYPE_FIELD]));
+			aContact.getPhoneNumbers().add(new Phone(Long.parseLong(fileLine[DataStore.DATA_FIELD]), fileLine[DataStore.DATATYPE_FIELD]));
 			
 			if (!contactFound) { //If the contact didn't exists, then I create it and save into the arrayList
 				_theAgenda.getContacts().add(aContact);
@@ -140,15 +135,15 @@ public class PersistentAgendaManagement {
 	 */
 	private void addEmailToAgenda(Agenda _theAgenda, String[] fileLine) {
 		if (_theAgenda != null) {
-			Contact aContact = _theAgenda.searchByName(fileLine[FIRSTNAME_FIELD], fileLine[LASTNAME_FIELD]);
+			Contact aContact = _theAgenda.searchByName(fileLine[DataStore.FIRSTNAME_FIELD], fileLine[DataStore.LASTNAME_FIELD]);
 			boolean contactFound = aContact != null; //If aContact is not null then the value is true;
 			
 			if (!contactFound) { //No contact found
-				aContact = new Contact(fileLine[FIRSTNAME_FIELD], fileLine[LASTNAME_FIELD]);
+				aContact = new Contact(fileLine[DataStore.FIRSTNAME_FIELD], fileLine[DataStore.LASTNAME_FIELD]);
 			}
 			
 			//Save the email
-			aContact.getEmailAddresses().add(new Email(fileLine[DATA_FIELD], fileLine[DATATYPE_FIELD]));
+			aContact.getEmailAddresses().add(new Email(fileLine[DataStore.DATA_FIELD], fileLine[DataStore.DATATYPE_FIELD]));
 			
 			if (!contactFound) { //If the contact didn't exists, then I create it and save into the arrayList
 				_theAgenda.getContacts().add(aContact);
