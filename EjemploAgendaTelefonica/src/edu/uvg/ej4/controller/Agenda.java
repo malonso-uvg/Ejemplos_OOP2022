@@ -28,9 +28,20 @@ public class Agenda {
 	
 	public boolean saveNewContactOnlyPhone(String firstname, String lastname, long phone, String type) {
 		try {
-			Contact newContact = new Contact(firstname, lastname);
+			Contact newContact = this.searchByName(firstname, lastname);
+			boolean isNewContact = false;
+			
+			if (newContact == null) {
+				newContact = new Contact(firstname, lastname);
+				isNewContact = true;
+			}
+				
 			newContact.getPhoneNumbers().add(new Phone(phone, type));
-			myAgenda.add(newContact);
+			
+			if (isNewContact) {
+				myAgenda.add(newContact);
+			}
+			
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -42,9 +53,19 @@ public class Agenda {
 	
 	public boolean saveNewContactOnlyEmail(String firstname, String lastname, String emailAddress, String type) {
 		try {
-			Contact newContact = new Contact(firstname, lastname);
+			Contact newContact = this.searchByName(firstname, lastname);
+			boolean isNewContact = false;
+			
+			if (newContact == null) {
+				newContact = new Contact(firstname, lastname);
+				isNewContact = true;
+			}
+			
 			newContact.getEmailAddresses().add(new Email(emailAddress, type));
-			myAgenda.add(newContact);
+			
+			if (isNewContact) {
+				myAgenda.add(newContact);
+			}
 			
 		} catch (Exception e) {
 			return false;
@@ -57,10 +78,20 @@ public class Agenda {
 			, String lastname, long phone, String phoneType
 			, String emailAddress, String emailType) {
 		try {
-			Contact newContact = new Contact(firstname, lastname);
+			Contact newContact = this.searchByName(firstname, lastname);
+			boolean isNewContact = false;
+			
+			if (newContact == null) {
+				newContact = new Contact(firstname, lastname);
+				isNewContact = true;
+			}
+			
 			newContact.getPhoneNumbers().add(new Phone(phone, phoneType));
 			newContact.getEmailAddresses().add(new Email(emailAddress, emailType));
-			myAgenda.add(newContact);
+			
+			if (isNewContact) {
+				myAgenda.add(newContact);
+			}
 			
 		} catch (Exception e) {
 			return false;

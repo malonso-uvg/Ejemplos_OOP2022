@@ -146,7 +146,9 @@ public class FileJSONDataStore extends DataStore {
 	        
 	        for (int i = 0; i < contacts.length(); i++) {
 	        	//Load Phones
+	        	
 	        	JSONArray phones = ((JSONObject)contacts.get(i)).getJSONArray("phones");
+	        	
 	        	for (int j = 0; j < phones.length(); j++) {
 	        		savedAgenda.saveNewContactOnlyPhone(
 	        				((JSONObject)contacts.get(i)).getString("firstname")
@@ -161,8 +163,8 @@ public class FileJSONDataStore extends DataStore {
 	        		savedAgenda.saveNewContactOnlyEmail(
 	        				((JSONObject)contacts.get(i)).getString("firstname")
 	        				, ((JSONObject)contacts.get(i)).getString("lastname")
-	        				, ((JSONObject)phones.get(j)).getString("emailAddress") 
-	        				, ((JSONObject)phones.get(j)).getString("type"));
+	        				, ((JSONObject)emails.get(j)).getString("emailAddress") 
+	        				, ((JSONObject)emails.get(j)).getString("type"));
 	        	}
 	        }
 	        
@@ -202,6 +204,7 @@ public class FileJSONDataStore extends DataStore {
 				JSONObject phone = new JSONObject();
 				phone.put("type", aPhone.getType());
 				phone.put("phoneNumber", aPhone.getPhoneNumber());
+				phonesJSON.put(phone);
 			}
 			contact.put("phones", phonesJSON);
 			
@@ -212,6 +215,7 @@ public class FileJSONDataStore extends DataStore {
 				JSONObject email = new JSONObject();
 				email.put("type", anEmail.getType());
 				email.put("emailAddress", anEmail.getEmailAddress());
+				emailsJSON.put(email);
 			}
 			contact.put("emails", emailsJSON);
 			
