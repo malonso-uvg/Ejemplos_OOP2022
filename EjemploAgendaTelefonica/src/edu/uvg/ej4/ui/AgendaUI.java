@@ -13,6 +13,7 @@ import edu.uvg.ej4.controller.Agenda;
 import edu.uvg.ej4.controller.DataStore;
 import edu.uvg.ej4.controller.FileJSONDataStore;
 import edu.uvg.ej4.controller.FileTXTDataStore;
+import edu.uvg.ej4.controller.FileXMLDataStore;
 import edu.uvg.ej4.model.Contact;
 import edu.uvg.ej4.model.Email;
 import edu.uvg.ej4.model.Phone;
@@ -309,6 +310,10 @@ public class AgendaUI extends JFrame {
 		
 		case 1:{
 			dataManagement = new FileJSONDataStore(myAgenda, _path);
+		}break;
+		
+		case 2:{
+			dataManagement = new FileXMLDataStore(myAgenda, _path);
 		}break;
 		
 		default:{
