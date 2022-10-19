@@ -30,6 +30,7 @@ import javax.swing.JList;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Properties;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -40,18 +41,21 @@ public class AgendaUI extends JFrame {
 	private JPanel contentPane;
 	private Agenda myAgenda;
 	private AgendaUI selfAgendaUI;
+	private Properties config;
+	
 	JLabel lblUserName;
 	JList lstContacts;
 	JTextArea txtPhones;
 	JTextArea txtEmails;
 
-	
 	/**
 	 * Create the frame.
 	 */
-	public AgendaUI() {
+	public AgendaUI(Properties _config) {
+		super();
 		
 		this.selfAgendaUI = this; 
+		config = _config;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 300, 625);
