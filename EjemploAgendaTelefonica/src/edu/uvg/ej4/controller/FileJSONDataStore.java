@@ -8,37 +8,56 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import edu.uvg.ej4.model.Contact;
 import edu.uvg.ej4.model.Email;
 import edu.uvg.ej4.model.Phone;
+
 
 /**
  * @author MAAG
  *
  */
-public class FileTXTDataStore extends DataStore {
-	
-	private File file;
+public class FileJSONDataStore extends DataStore {
+
 	private String path;
+	private File file;
 	
-	public FileTXTDataStore(Agenda _agenda) {
+	public FileJSONDataStore(Agenda _agenda) {
 		super();
 		setAgenda(_agenda);
 	}
 	
-	public FileTXTDataStore(Agenda _agenda, String _path) {
+	public FileJSONDataStore(Agenda _agenda, String _path) {
 		super();
 		setAgenda(_agenda);
 		setPath(_path);
 		setFile(new File(_path));
 	}
 	
-	public FileTXTDataStore(Agenda _agenda, File _file, String _path) {
+	public FileJSONDataStore(Agenda _agenda, File _file, String _path) {
 		super();
 		setAgenda(_agenda);
 		setFile(_file);
 		setPath(_path);
 	}
+	
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * @param path the path to set
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 
 	/**
 	 * @return the file
@@ -52,20 +71,6 @@ public class FileTXTDataStore extends DataStore {
 	 */
 	public void setFile(File file) {
 		this.file = file;
-	}
-
-	/**
-	 * @return the path
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * @param path the path to set
-	 */
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	@Override
@@ -82,7 +87,6 @@ public class FileTXTDataStore extends DataStore {
 		}
 		
 		return true;
-		
 	}
 
 	@Override
@@ -95,7 +99,6 @@ public class FileTXTDataStore extends DataStore {
 
 	@Override
 	public void saveData() throws Exception {
-		
 		FileWriter writer;
 		
 		if (getFile().createNewFile()) {
@@ -109,7 +112,7 @@ public class FileTXTDataStore extends DataStore {
 		}
 		
 		if (writer != null) {
-			writer.write(convertAgendaToText(getAgenda()));
+			writer.write(convertAgendaToJSon(getAgenda()));
 			writer.close();
 		} 
 
@@ -120,44 +123,49 @@ public class FileTXTDataStore extends DataStore {
 		
 		
 		if (getFile().isFile() && getFile().canRead()) {
-			Agenda savedAgenda = null;
+			
 			BufferedReader reader = new BufferedReader(new FileReader(getFile()));
 
+			String completeFile = "";
+			
 	        try {
 	            String line;
-
-	            int counter = 0;
+	            
 	            while ((line = reader.readLine()) != null) {
-	                if (counter == 0) { //Is the first line
-	                	savedAgenda = new Agenda(line);  //Then create the agenda
-	                } else { //if is not the firstline, then the following lines are data
-	                	if (savedAgenda != null) {
-	                		
-	                		if (line.split(",").length == 5) {
-	                			String[] fields = line.split(",");
-	                			
-	                			if (fields[DataStore.TYPE_FIELD].charAt(DataStore.TYPE_FIELD) == '1') { //it is a phone
-	                				addPhoneToAgenda(savedAgenda, fields);
-	                			} else if (fields[0].charAt(0) == '2') { //it is a email
-	                				addEmailToAgenda(savedAgenda, fields);
-	                			} else {
-	                				throw new Exception("Incorrect line format at line: " + counter);
-	                			}
-	                			
-	                		} else {
-	                			throw new Exception("Incorrect file format");
-	                		}
-	                		
-	                	} else {
-	                		throw new Exception("Agenda couldn't be created");
-	                	}
-	                }
-	                counter++;
+	                completeFile += line;
 	            }
 
 	        } finally {
 	            reader.close();
 	        }
+	        
+	        JSONObject agendaFile = new JSONObject(completeFile);
+	        Agenda savedAgenda = new Agenda(agendaFile.getString("owner"));
+	        
+	        JSONArray contacts = agendaFile.getJSONArray("contacts");
+	        
+	        for (int i = 0; i < contacts.length(); i++) {
+	        	//Load Phones
+	        	JSONArray phones = ((JSONObject)contacts.get(i)).getJSONArray("phones");
+	        	for (int j = 0; j < phones.length(); j++) {
+	        		savedAgenda.saveNewContactOnlyPhone(
+	        				((JSONObject)contacts.get(i)).getString("firstname")
+	        				, ((JSONObject)contacts.get(i)).getString("lastname")
+	        				,  Long.parseLong( ((JSONObject)phones.get(j)).getString("phoneNumber") )
+	        				, ((JSONObject)phones.get(j)).getString("type"));
+	        	}
+	        	
+	        	//Load Emails
+	        	JSONArray emails = ((JSONObject)contacts.get(i)).getJSONArray("emails");
+	        	for (int j = 0; j < emails.length(); j++) {
+	        		savedAgenda.saveNewContactOnlyEmail(
+	        				((JSONObject)contacts.get(i)).getString("firstname")
+	        				, ((JSONObject)contacts.get(i)).getString("lastname")
+	        				, ((JSONObject)phones.get(j)).getString("emailAddress") 
+	        				, ((JSONObject)phones.get(j)).getString("type"));
+	        	}
+	        }
+	        
 	        
 	        setAgenda(savedAgenda);
 	        
@@ -168,43 +176,51 @@ public class FileTXTDataStore extends DataStore {
 
 	}
 	
+	
 	/***
 	 * This method will convert an aganda into a string to be saved in a file
 	 * @param _theAgenda the agenda that needs to be saved
 	 * @return the file content, as String
 	 */
-	private String convertAgendaToText(Agenda _theAgenda) {
+	private String convertAgendaToJSon(Agenda _theAgenda) throws Exception{
 		
-		String content = "";
+		JSONObject agendaJSON = new JSONObject();
 		
-		content = "" + _theAgenda.getOwnerID() + "\r\n";
+		agendaJSON.put("owner", _theAgenda.getOwnerID());
+		
 		
 		//Saving the contacts
+		JSONArray contactsJSON = new JSONArray();
 		for (Contact aContact : _theAgenda.getContacts()) {
+			JSONObject contact = new JSONObject();
+			contact.put("firstname", aContact.getFirstName());
+			contact.put("lastname", aContact.getLastName());
 			
 			//Saving the phones
-			String phones = "";
-			for (Phone aPhone : aContact.getPhoneNumbers()) {
-				phones += "1," + aContact.getFirstName() 
-					+ "," + aContact.getLastName() 
-					+ "," + aPhone.getPhoneNumber()
-					+ "," + aPhone.getType() + "\r\n";
+			JSONArray phonesJSON = new JSONArray();
+			for (Phone aPhone: aContact.getPhoneNumbers()) {
+				JSONObject phone = new JSONObject();
+				phone.put("type", aPhone.getType());
+				phone.put("phoneNumber", aPhone.getPhoneNumber());
 			}
+			contact.put("phones", phonesJSON);
 			
-			content += phones;
 			
 			//Saving the emails
-			String emails = "";
-			for (Email anEmail : aContact.getEmailAddresses()) {
-				emails += "2," + aContact.getFirstName() 
-					+ "," + aContact.getLastName() 
-					+ "," + anEmail.getEmailAddress()
-					+ "," + anEmail.getType() + "\r\n";
+			JSONArray emailsJSON = new JSONArray();
+			for (Email anEmail: aContact.getEmailAddresses()) {
+				JSONObject email = new JSONObject();
+				email.put("type", anEmail.getType());
+				email.put("emailAddress", anEmail.getEmailAddress());
 			}
-			content += emails;
+			contact.put("emails", emailsJSON);
+			
+			contactsJSON.put(contact);
 		}
 		
-		return content;
+		agendaJSON.put("contacts", contactsJSON);
+		
+		return agendaJSON.toString();
 		
 	}
 	

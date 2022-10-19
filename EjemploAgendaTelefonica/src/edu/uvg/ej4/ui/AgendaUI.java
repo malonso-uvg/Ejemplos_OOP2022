@@ -10,7 +10,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JFileChooser;
 
 import edu.uvg.ej4.controller.Agenda;
-import edu.uvg.ej4.controller.PersistentAgendaManagement;
+import edu.uvg.ej4.controller.DataStore;
+import edu.uvg.ej4.controller.FileJSONDataStore;
+import edu.uvg.ej4.controller.FileTXTDataStore;
 import edu.uvg.ej4.model.Contact;
 import edu.uvg.ej4.model.Email;
 import edu.uvg.ej4.model.Phone;
@@ -47,6 +49,7 @@ public class AgendaUI extends JFrame {
 	JList lstContacts;
 	JTextArea txtPhones;
 	JTextArea txtEmails;
+	DataStore dataManagement;
 
 	/**
 	 * Create the frame.
@@ -92,13 +95,15 @@ public class AgendaUI extends JFrame {
 				int returnVal = fileDialog.showOpenDialog(selfAgendaUI);
 	            
 	            if (returnVal == JFileChooser.APPROVE_OPTION) {
-	               File file = fileDialog.getSelectedFile();
-	               
-	               PersistentAgendaManagement agendaController = new PersistentAgendaManagement();
-				    
+	                
 				    try {
 				    	
-				    	myAgenda = agendaController.getAgendaFromFile(file);
+				    	setDataStore(myAgenda, fileDialog.getSelectedFile().getAbsolutePath());
+				    	
+				    	dataManagement.initializeDS();
+					    dataManagement.getData();
+					    myAgenda = dataManagement.getAgenda();
+				    	
 				    	showInformationOnUI();
 				    	
 				    	JOptionPane.showMessageDialog(
@@ -137,16 +142,19 @@ public class AgendaUI extends JFrame {
 				 
 				if (userSelection == JFileChooser.APPROVE_OPTION) {
 				    
-				    PersistentAgendaManagement agendaController = new PersistentAgendaManagement();
-				    
-				    JOptionPane.showMessageDialog(
-							selfAgendaUI, 
-							"La agenda se guardó exitosamente",
-                            "Operación Exitosa",
-                            JOptionPane.INFORMATION_MESSAGE);
-				    
 				    try {
-				    	agendaController.saveAgendaIntoFile(myAgenda, fileChooser.getSelectedFile().getAbsolutePath());
+				    	setDataStore(myAgenda, fileChooser.getSelectedFile().getAbsolutePath());
+				    	
+				    	dataManagement.initializeDS();
+				    	dataManagement.saveData();
+				    	
+				    	JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"La agenda se guardó exitosamente",
+	                            "Operación Exitosa",
+	                            JOptionPane.INFORMATION_MESSAGE);
+				    	
+				    	
 				    } catch (Exception ex ){
 				    	JOptionPane.showMessageDialog(
 								selfAgendaUI, 
@@ -268,6 +276,8 @@ public class AgendaUI extends JFrame {
 		this.myAgenda = myAgenda;
 	}
 	
+	
+	
 	public void showInformationOnUI() {
 		if (this.myAgenda != null) { //it means agenda has been created
 			getLblAgenda().setText("Mi Agenda (" + myAgenda.getOwnerID() + ")");
@@ -285,6 +295,26 @@ public class AgendaUI extends JFrame {
 				lstContacts.setSelectedIndex(0);
 			}
 			
+		}
+	}
+	
+	public void setDataStore(Agenda myAgenda, String _path) {
+		int dataStoreType = Integer.parseInt(config.getProperty("DATA_STORE"));
+		
+		switch(dataStoreType) {
+		
+		case 0:{
+			dataManagement = new FileTXTDataStore(myAgenda, _path);
+		}break;
+		
+		case 1:{
+			dataManagement = new FileJSONDataStore(myAgenda, _path);
+		}break;
+		
+		default:{
+			dataManagement = new FileTXTDataStore(myAgenda, _path);
+		}break;
+		
 		}
 	}
 }
