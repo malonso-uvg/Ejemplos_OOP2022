@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JFileChooser;
 
 import edu.uvg.ej4.controller.Agenda;
+import edu.uvg.ej4.controller.DBMySQLDataStore;
 import edu.uvg.ej4.controller.DataStore;
 import edu.uvg.ej4.controller.FileJSONDataStore;
 import edu.uvg.ej4.controller.FileTXTDataStore;
@@ -91,44 +92,74 @@ public class AgendaUI extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Cargar Agenda");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final JFileChooser  fileDialog = new JFileChooser();
+				int dataStoreType = Integer.parseInt(config.getProperty("DATA_STORE"));
 				
-				int returnVal = fileDialog.showOpenDialog(selfAgendaUI);
-	            
-	            if (returnVal == JFileChooser.APPROVE_OPTION) {
-	                
-				    try {
-				    	
-				    	setDataStore(myAgenda, fileDialog.getSelectedFile().getAbsolutePath());
-				    	
-				    	dataManagement.initializeDS();
+				if (dataStoreType == 3) { //DB type DataStore
+					
+					setDataStore(myAgenda, "");
+			    	try {
+			    		dataManagement.initializeDS();
 					    dataManagement.getData();
 					    myAgenda = dataManagement.getAgenda();
-				    	
-				    	showInformationOnUI();
-				    	
-				    	JOptionPane.showMessageDialog(
+					    
+					    showInformationOnUI();
+					    
+					    JOptionPane.showMessageDialog(
 								selfAgendaUI, 
 								"La agenda se cargó exitosamente",
 	                            "Operación Exitosa",
 	                            JOptionPane.INFORMATION_MESSAGE);
-				    	
-				    } catch (Exception ex ){
-				    	JOptionPane.showMessageDialog(
+					    
+			    	} catch(Exception ex) {
+			    		System.out.println(ex.getMessage());
+			    		JOptionPane.showMessageDialog(
 								selfAgendaUI, 
-								"Se encontró un error al intentar cargar la agenda: " + ex.getMessage(),
+								"Se encontró un error al intentar cargar la agenda" + ex.getMessage(),
 	                            "No se pudo cargar",
 	                            JOptionPane.ERROR_MESSAGE);
-				    }
-	               
-	            } else {
-	            	JOptionPane.showMessageDialog(
-							selfAgendaUI, 
-							"Se encontró un error al intentar cargar la agenda",
-                            "No se pudo cargar",
-                            JOptionPane.ERROR_MESSAGE);
-	            }      
-	         
+			    	}
+			    	
+				    
+				} else {
+				
+					final JFileChooser  fileDialog = new JFileChooser();
+					
+					int returnVal = fileDialog.showOpenDialog(selfAgendaUI);
+		            
+		            if (returnVal == JFileChooser.APPROVE_OPTION) {
+		                
+					    try {
+					    	
+					    	setDataStore(myAgenda, fileDialog.getSelectedFile().getAbsolutePath());
+					    	
+					    	dataManagement.initializeDS();
+						    dataManagement.getData();
+						    myAgenda = dataManagement.getAgenda();
+					    	
+					    	showInformationOnUI();
+					    	
+					    	JOptionPane.showMessageDialog(
+									selfAgendaUI, 
+									"La agenda se cargó exitosamente",
+		                            "Operación Exitosa",
+		                            JOptionPane.INFORMATION_MESSAGE);
+					    	
+					    } catch (Exception ex ){
+					    	JOptionPane.showMessageDialog(
+									selfAgendaUI, 
+									"Se encontró un error al intentar cargar la agenda: " + ex.getMessage(),
+		                            "No se pudo cargar",
+		                            JOptionPane.ERROR_MESSAGE);
+					    }
+		               
+		            } else {
+		            	JOptionPane.showMessageDialog(
+								selfAgendaUI, 
+								"Se encontró un error al intentar cargar la agenda",
+	                            "No se pudo cargar",
+	                            JOptionPane.ERROR_MESSAGE);
+		            }      
+				}
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
@@ -314,6 +345,10 @@ public class AgendaUI extends JFrame {
 		
 		case 2:{
 			dataManagement = new FileXMLDataStore(myAgenda, _path);
+		}break;
+		
+		case 3:{
+			dataManagement = new DBMySQLDataStore(myAgenda);
 		}break;
 		
 		default:{
